@@ -1,4 +1,4 @@
-# Fairness-e-Vi-s-Introduzido-por-Privacidade-Diferencial
+# Fairness-e-Vies-Introduzido-por-Privacidade-Diferencial
 ---
 
 # 📦 Projeto C — Fairness e Viés Introduzido por Privacidade Diferencial
