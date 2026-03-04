@@ -1,44 +1,63 @@
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
+
 
 def build_preprocessor(df):
     """
     Preprocessor fixo do experimento.
 
-    - As colunas são derivadas explicitamente do dataset fornecido.
-    - O objetivo é manter o mesmo protocolo mesmo com degradação estrutural dos dados.
+    Responsabilidades:
+    - Selecionar features válidas presentes no dataset
+    - Separar colunas categóricas e numéricas
+    - Aplicar OneHotEncoder nas categóricas
+    - Padronizar numéricas
+    
+    Parâmetros:
+    - df: dataframe de entrada
+    - groups: lista de colunas usadas para fairness (ex: ["cargo", "setor"])
     """
 
-    target = "salario"
+    groups = ["cargo", "setor"]
+
+    categorical_candidates = ["cargo", "setor"]
+
+    numerical_candidates = ["idade", "tempo_na_empresa", "nota_media"]
 
     categorical_cols = [
-        col for col in ["cargo", "setor"]
+        col for col in categorical_candidates
         if col in df.columns
     ]
 
     numerical_cols = [
-        col for col in ["idade", "tempo_na_empresa", "nota_media"]
+        col for col in numerical_candidates
         if col in df.columns
     ]
 
     if not categorical_cols and not numerical_cols:
         raise ValueError("Nenhuma feature válida encontrada para o experimento.")
 
-    return ColumnTransformer(
+    for group in groups:
+        if group not in df.columns:
+            raise ValueError(f"Coluna de grupo '{group}' não encontrada no dataset.")
+
+    preprocessor = ColumnTransformer(
         transformers=[
             (
                 "categorical",
                 OneHotEncoder(
-                    drop="first",
-                    handle_unknown='ignore'
+                    drop=None,                 
+                    handle_unknown="ignore",
+                    sparse_output=False
                 ),
                 categorical_cols
             ),
             (
                 "numerical",
-                "passthrough",
+                StandardScaler(),             
                 numerical_cols
             ),
         ],
         remainder="drop"
     )
+
+    return preprocessor
