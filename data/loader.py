@@ -1,0 +1,18 @@
+import pandas as pd
+from config import ACTIVE_DATASET_DIR
+
+
+def load_data(path):
+    return pd.read_csv(path)
+
+
+def run():
+    base = ACTIVE_DATASET_DIR
+
+    df_baseline = load_data(base / "baseline.csv")
+    df_dp_01 = load_data(base / "dp_eps_0.1.csv")
+    df_dp_05 = load_data(base / "dp_eps_0.5.csv")
+    df_dp_10 = load_data(base / "dp_eps_1.0.csv")
+    df_dp_20 = load_data(base / "dp_eps_2.0.csv")
+
+    return df_baseline, df_dp_01, df_dp_05, df_dp_10, df_dp_20
