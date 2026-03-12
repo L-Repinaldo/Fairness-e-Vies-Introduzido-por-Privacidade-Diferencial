@@ -1,6 +1,6 @@
 from sklearn.metrics import confusion_matrix, recall_score
 
-def model_metrics(y_true, y_pred):
+def compute_model_metrics(y_true, y_pred):
 
     tn, fp, fn, tp = confusion_matrix(y_true= y_true, y_pred= y_pred).ravel()
 

@@ -1,4 +1,4 @@
-def data_metrics(series):
+def compute_data_metrics(series):
 
     mean = series.mean()
     median = series.median()

@@ -1,2 +1,2 @@
-from .model import model_metrics
-from .data import data_metrics
+from .model import compute_model_metrics
+from .data import compute_data_metrics
