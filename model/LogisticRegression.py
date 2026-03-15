@@ -2,15 +2,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 
 
-def run_logistic_regression(
-    df,
-    preprocessor,
-    *,
-    target,
-    groups,
-    test_size=0.3,
-    seed=42
-):
+def run_logistic_regression( df, preprocessor, *, target= "salario", test_size=0.3, seed=42 ):
     """
     Executa Logistic Regression para o experimento de fairness.
 
@@ -25,11 +17,6 @@ def run_logistic_regression(
     if target not in df.columns:
         raise ValueError(f"Target '{target}' não encontrado no dataset.")
 
-    for g in groups:
-        if g not in df.columns:
-            raise ValueError(f"Coluna de grupo '{g}' não encontrada no dataset.")
-
-
     X = df.drop(columns=[target])
     y = df[target]
 
@@ -37,8 +24,6 @@ def run_logistic_regression(
         X, y, test_size=test_size,
         random_state=seed, stratify=y 
     )
-
-    groups_test = {g: X_test[g].copy() for g in groups}
 
     X_train_processed = preprocessor.fit_transform(X_train)
     X_test_processed = preprocessor.transform(X_test)
@@ -55,6 +40,5 @@ def run_logistic_regression(
     return {
         "y_test_true": y_test,
         "y_test_pred": y_test_pred,
-        "groups_test": groups_test,
         "model": model,
     }
