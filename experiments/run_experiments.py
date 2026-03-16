@@ -1,5 +1,7 @@
 from statistics import mean
 
+import pandas as pd
+
 from metrics import compute_data_metrics
 
 from . import run_model, model_metrics
@@ -12,6 +14,19 @@ def _aggregate_metrics(metrics_list):
         k: round(mean(m[k] for m in metrics_list), 3)
         for k in metrics_list[0].keys()
     }
+
+def _add_salary_class(df, stats):
+    mean_value = stats["mean"]
+    std_value = stats["std"]
+    upper = mean_value + std_value
+
+    df_out = df.copy()
+
+    df_out["salario_classe"] = (
+        df_out["salario"] > upper
+    ).astype(int)
+
+    return df_out
 
 
 def run_experimemnt(model_name, model_runner, datasets, dataset_names):
@@ -34,18 +49,22 @@ def run_experimemnt(model_name, model_runner, datasets, dataset_names):
 
     for name, df in zip(dataset_names, datasets):
 
-        data_stats[name] = compute_data_metrics(df['salario'])
+        stats = compute_data_metrics(df['salario'])
+        data_stats[name] = stats
+
+        df_with_target = _add_salary_class(df, stats)
 
         model_runs = []
 
         for seed in SEEDS:
             for test_size in TEST_SIZES:
 
-                model_results = run_model(df=df, model_name=model_name,
+                model_results = run_model(df=df_with_target, model_name=model_name,
                                             model_runner=lambda **kwargs: model_runner(
                                                 **kwargs,
                                                 seed= seed,
-                                                test_size= test_size
+                                                test_size= test_size,
+                                                target= "salario_classe"
                                             )
                                         )
                 model_metrics_values = model_metrics(model_output= model_results, dataset_name=name , model_name=model_name) 

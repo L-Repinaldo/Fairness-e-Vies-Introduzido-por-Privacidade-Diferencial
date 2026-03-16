@@ -29,7 +29,7 @@ def run_logistic_regression( df, preprocessor, *, target= "salario", test_size=0
     X_test_processed = preprocessor.transform(X_test)
 
     model = LogisticRegression(
-        solver="liblinear", penalty="l2", C=1.0,
+        solver="liblinear", C=1.0,
         max_iter=1000, random_state=seed
     )
 
