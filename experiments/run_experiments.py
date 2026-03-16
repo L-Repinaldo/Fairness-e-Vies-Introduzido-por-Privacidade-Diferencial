@@ -62,7 +62,6 @@ def _group_metrics_for_run(df, y_true, y_pred, dataset_name, group_col):
             "fn": metrics["fn"],
             "tpr": metrics["tpr"],
             "fpr": metrics["fpr"],
-            "recall": metrics["recall"],
             "support": int(mask.sum()),
         })
 
@@ -138,7 +137,6 @@ def run_experimemnt(model_name, model_runner, datasets, dataset_names):
                         "fn": row["fn"],
                         "tpr": row["tpr"],
                         "fpr": row["fpr"],
-                        "recall": row["recall"],
                         "support": row["support"],
                     })
 
@@ -150,7 +148,6 @@ def run_experimemnt(model_name, model_runner, datasets, dataset_names):
                         "fn": row["fn"],
                         "tpr": row["tpr"],
                         "fpr": row["fpr"],
-                        "recall": row["recall"],
                         "support": row["support"],
                     })
 

@@ -41,7 +41,6 @@ if __name__ == '__main__':
                 "false negative": payload['results']['fn'],
                 "true positive rate": payload['results']['tpr'],
                 "false positive rate": payload['results']['fpr'],
-                "recall": payload['results']['recall'],
 
             })
         
