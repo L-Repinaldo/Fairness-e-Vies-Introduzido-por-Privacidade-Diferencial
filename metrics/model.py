@@ -1,4 +1,4 @@
-from sklearn.metrics import confusion_matrix, recall_score
+from sklearn.metrics import confusion_matrix
 
 def compute_model_metrics(y_true, y_pred):
 

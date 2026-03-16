@@ -34,7 +34,7 @@ def _aggregate_group_metrics(metrics_list):
 
     aggregated = {
         k: round(mean(m[k] for m in metrics_list), 3)
-        for k in ["tp", "tn", "fp", "fn", "tpr", "fpr", "recall"]
+        for k in ["tp", "tn", "fp", "fn", "tpr", "fpr"]
     }
     aggregated["support"] = int(round(mean(m["support"] for m in metrics_list)))
     return aggregated
