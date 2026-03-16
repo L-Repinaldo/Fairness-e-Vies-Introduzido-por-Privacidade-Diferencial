@@ -23,8 +23,12 @@ if __name__ == '__main__':
         print(f"{model_name} execution")
         print(f"{'='*40}")
 
-        data_output, model_output = run_experimemnt(model_name= model_name, model_runner= runner,
-                                                    datasets=datasets, dataset_names=names)
+        data_output, model_output, cargo_output, setor_output = run_experimemnt(
+            model_name= model_name,
+            model_runner= runner,
+            datasets=datasets,
+            dataset_names=names
+        )
         
         for dataset_name, payload in model_output.items():
 
@@ -53,7 +57,23 @@ if __name__ == '__main__':
         df_classification = pd.DataFrame(classification_rows)
         df_data = pd.DataFrame(data_rows)
 
+        cargo_rows = []
+        for dataset_name, payload in cargo_output.items():
+            for row in payload["results"]:
+                cargo_rows.append(row)
+
+        setor_rows = []
+        for dataset_name, payload in setor_output.items():
+            for row in payload["results"]:
+                setor_rows.append(row)
+
+        df_cargo = pd.DataFrame(cargo_rows)
+        df_setor = pd.DataFrame(setor_rows)
+
         print(df_classification)
         print()
         print(df_data)
-
+        print()
+        print(df_cargo)
+        print()
+        print(df_setor)
