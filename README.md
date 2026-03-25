@@ -29,6 +29,7 @@ Avaliar se e como a aplicação de Privacidade Diferencial em dados tabulares de
 * Treina **um classificador simples e fixo**
 * Mede métricas de fairness por grupo
 * Compara baseline vs versões DP (ε variados)
+* Agrega métricas por seed e por tamanho de teste
 * Gera tabelas e plots explicativos
 * Produz síntese para discussão acadêmica
 
@@ -55,6 +56,7 @@ project-c-fairness-dp/
 ├── metrics/                   
 ├── plots/            
 ├── experiments/      
+├── sanity_check/     
 ├── config.py         
 └── main.py
 ```
@@ -77,6 +79,21 @@ project-c-fairness-dp/
 Justificativa:
 Modelo simples, interpretável, sensível a ruído.
 
+---
+
+## Como executar
+
+1. Execute o pipeline principal:
+```bash
+python main.py
+```
+
+2. (Opcional) Rode o sanity check no baseline:
+```bash
+python sanity_check/sanity_model_check.py
+```
+
+
 
 
 
@@ -86,15 +103,11 @@ O projeto deve produzir:
 
 * Tabelas:
 
-  * Fairness por grupo × ε
+  * Variação das métricas utilizadas conforme ε
+  
 * Gráficos:
 
-  * Degradação de fairness conforme ε
-* Síntese:
-
-  * “DP introduziu assimetria?”
-  * “Qual grupo foi mais afetado?”
-  * “Fairness se degrada mais rápido que utilidade?”
+  * Evolução da taxa de verdadeiros positivos (tpr) por setor conforme ε
 
 ---
 
