@@ -1,121 +1,78 @@
-# Fairness-e-Vies-Introduzido-por-Privacidade-Diferencial
----
+﻿# Fairness-e-Vies-Introduzido-por-Privacidade-Diferencial
 
-# 📦 Projeto C — Fairness e Viés Introduzido por Privacidade Diferencial
+## Visao Geral
+Este projeto avalia se datasets tabulares de RH com privacidade diferencial (DP) podem induzir vies mensuravel em modelos simples. A comparacao e feita entre um baseline e versoes DP (eps_0.1, eps_0.5, eps_1.0, eps_2.0) ja prontas no repositorio.
 
-## 🎯 Visão Geral
+O pipeline executa um classificador fixo (Regressao Logistica) e mede metricas globais e por grupo (setor), agregando resultados por seeds e tamanhos de teste.
 
-**Objetivo central:**
-Avaliar se e como a aplicação de Privacidade Diferencial em dados tabulares de RH **introduz viés mensurável em decisões automatizadas**, mesmo quando a DP é corretamente aplicada.
+## O que foi implementado
+- Carregamento de datasets versionados em `data/datasets/<versao>`
+- Criacao do target `salario_classe` usando o limiar `mean + std` do salario
+- Preprocessamento fixo com one-hot em `cargo` e `setor`
+- Padronizacao de `idade`, `tempo_na_empresa`, `nota_media` quando presentes
+- Treino com Regressao Logistica (`liblinear`, `max_iter=1000`)
+- Avaliacao com matriz de confusao (tp, tn, fp, fn, tpr, fpr)
+- Fairness por grupo **setor** com filtro de tamanho minimo (>= 30)
+- Agregacao de metricas por seed e por test_size
+- Visualizacao em tabelas e grafico (TPR x epsilon por setor)
 
-**Pergunta de pesquisa:**
+## O que nao esta no projeto
+- Aplicacao de DP (os datasets DP ja estao prontos)
+- Ajuste de hiperparametros
+- Comparacao de mecanismos DP
+- Ataques de inferencia
+- Alteracao dos datasets
 
-> A Privacidade Diferencial pode degradar fairness de modelos simples de forma assimétrica entre grupos?
-
-**Hipóteses:**
-
-* H1: O ruído da DP não afeta todos os grupos da mesma forma.
-* H2: Grupos menores sofrem maior degradação de métricas de fairness sob ε baixo.
-* H3: O trade-off privacidade × utilidade possui uma terceira dimensão: **fairness**.
-
----
-
-## 🧩 Escopo Funcional
-
-### ✅ O Projeto C faz
-
-* Carrega datasets versionados do DP-Data-Pipeline
-* Reutiliza a camada de input do Projeto B
-* Treina **um classificador simples e fixo**
-* Mede métricas de fairness por grupo
-* Compara baseline vs versões DP (ε variados)
-* Agrega métricas por seed e por tamanho de teste
-* Gera tabelas e plots explicativos
-* Produz síntese para discussão acadêmica
-
-### ❌ O Projeto C não faz
-
-* Não aplica DP
-* Não faz tuning agressivo de modelos
-* Não compara mecanismos de DP
-* Não executa MIA
-* Não busca SOTA
-* Não altera datasets
-
----
-
-## 🏗️ Arquitetura
-
-Você pode literalmente clonar e podar:
-
+## Estrutura
 ```text
 project-c-fairness-dp/
-├── data/              
-├── preprocessing/    
-├── model/            
-├── metrics/                   
-├── plots/            
-├── experiments/      
-├── sanity_check/     
-├── config.py         
+├── data/
+├── preprocessing/
+├── model/
+├── metrics/
+├── plots/
+├── experiments/
+├── sanity_check/
+├── config.py
 └── main.py
 ```
 
----
-
-## 🛠️ Ferramentas
-
-**Stack:**
-
-* Python
-* Pandas / NumPy
-* scikit-learn 
-* Matplotlib 
-
-**Classificador:**
-
-* Regressão Logística 
-
-Justificativa:
-Modelo simples, interpretável, sensível a ruído.
-
----
+## Dependencias
+Instale os pacotes listados em `requirements.txt`:
+```bash
+pip install -r requirements.txt
+```
 
 ## Como executar
-
-1. Execute o pipeline principal:
+1. Pipeline principal:
 ```bash
 python main.py
 ```
 
-2. (Opcional) Rode o sanity check no baseline:
+2. Sanity check (baseline):
 ```bash
 python sanity_check/sanity_model_check.py
 ```
 
+## Dados esperados
+Os CSVs sao carregados de `data/datasets/<versao>` (definido em `config.py`) com os nomes:
+- `baseline.csv`
+- `dp_eps_0.1.csv`
+- `dp_eps_0.5.csv`
+- `dp_eps_1.0.csv`
+- `dp_eps_2.0.csv`
 
+Colunas esperadas:
+- `salario` (usado para gerar `salario_classe`)
+- `cargo` (obrigatoria)
+- `setor` (obrigatoria)
+- `idade` (opcional)
+- `tempo_na_empresa` (opcional)
+- `nota_media` (opcional)
 
+## Saidas
+- Tabelas com metricas globais e variacao dos dados
+- Tabela por setor com metricas de classificacao
+- Grafico de evolucao do TPR por setor em funcao do epsilon
 
-
-## 📈 Resultados Esperados
-
-O projeto deve produzir:
-
-* Tabelas:
-
-  * Variação das métricas utilizadas conforme ε
-  
-* Gráficos:
-
-  * Evolução da taxa de verdadeiros positivos (tpr) por setor conforme ε
-
----
-
-## 📜 Objetivos Acadêmicos
-
-O Projeto C deve permitir afirmar:
-
-* DP pode introduzir **viés mensurável**
-* O impacto da DP **não é uniforme**
-* Fairness deve ser considerada no trade-off junto com utilidade e segurança
-* Privacidade não é neutra do ponto de vista distributivo
+As visualizacoes sao exibidas via Matplotlib (nao sao salvas em disco por padrao).
