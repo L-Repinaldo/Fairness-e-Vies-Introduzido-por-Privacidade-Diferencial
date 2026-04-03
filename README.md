@@ -1,27 +1,25 @@
 ﻿# Fairness-e-Vies-Introduzido-por-Privacidade-Diferencial
 
-## Visao Geral
-Este projeto avalia se datasets tabulares de RH com privacidade diferencial (DP) podem induzir vies mensuravel em modelos simples. A comparacao e feita entre um baseline e versoes DP (eps_0.1, eps_0.5, eps_1.0, eps_2.0) ja prontas no repositorio.
+## Visão Geral
+Este projeto avalia se datasets tabulares de RH com privacidade diferencial (DP) podem induzir viés mensurável em modelos simples. A comparação é feita entre um baseline e versões DP (eps_0.1, eps_0.5, eps_1.0, eps_2.0) já disponíveis no repositório.
 
-O pipeline executa um classificador fixo (Regressao Logistica) e mede metricas globais e por grupo (setor), agregando resultados por seeds e tamanhos de teste.
+O pipeline executa um classificador fixo (Regressão Logística) e mede métricas globais e por grupo (setor), agregando resultados por seeds e tamanhos de teste.
 
 ## O que foi implementado
 - Carregamento de datasets versionados em `data/datasets/<versao>`
-- Criacao do target `salario_classe` usando o limiar `mean + std` do salario
+- Criação do target `salario_classe` usando o limiar `mean + std` do salário
 - Preprocessamento fixo com one-hot em `cargo` e `setor`
-- Padronizacao de `idade`, `tempo_na_empresa`, `nota_media` quando presentes
-- Treino com Regressao Logistica (`liblinear`, `max_iter=1000`)
-- Avaliacao com matriz de confusao (tp, tn, fp, fn, tpr, fpr)
-- Fairness por grupo **setor** com filtro de tamanho minimo (>= 30)
-- Agregacao de metricas por seed e por test_size
-- Visualizacao em tabelas e grafico (TPR x epsilon por setor)
+- Padronização de `idade`, `tempo_na_empresa`, `nota_media` quando presentes
+- Treino com Regressão Logística (`liblinear`, `max_iter=1000`)
+- Avaliação com matriz de confusão (tp, tn, fp, fn, tpr, fpr)
+- Fairness por grupo **setor** com filtro de tamanho mínimo (>= 30)
+- Agregação de métricas por seed e por test_size
+- Visualização em tabelas e gráfico (TPR x epsilon por setor)
 
-## O que nao esta no projeto
-- Aplicacao de DP (os datasets DP ja estao prontos)
-- Ajuste de hiperparametros
-- Comparacao de mecanismos DP
-- Ataques de inferencia
-- Alteracao dos datasets
+## O que não está no projeto
+- Aplicação de DP (os datasets DP já estão prontos)
+- Comparação de mecanismos DP
+- Alteração dos datasets
 
 ## Estrutura
 ```text
@@ -37,7 +35,7 @@ project-c-fairness-dp/
 └── main.py
 ```
 
-## Dependencias
+## Dependências
 Instale os pacotes listados em `requirements.txt`:
 ```bash
 pip install -r requirements.txt
@@ -55,7 +53,7 @@ python sanity_check/sanity_model_check.py
 ```
 
 ## Dados esperados
-Os CSVs sao carregados de `data/datasets/<versao>` (definido em `config.py`) com os nomes:
+Os CSVs são carregados de `data/datasets/<versao>` (definido em `config.py`) com os nomes:
 - `baseline.csv`
 - `dp_eps_0.1.csv`
 - `dp_eps_0.5.csv`
@@ -64,15 +62,15 @@ Os CSVs sao carregados de `data/datasets/<versao>` (definido em `config.py`) com
 
 Colunas esperadas:
 - `salario` (usado para gerar `salario_classe`)
-- `cargo` (obrigatoria)
-- `setor` (obrigatoria)
+- `cargo` (obrigatória)
+- `setor` (obrigatória)
 - `idade` (opcional)
 - `tempo_na_empresa` (opcional)
 - `nota_media` (opcional)
 
-## Saidas
-- Tabelas com metricas globais e variacao dos dados
-- Tabela por setor com metricas de classificacao
-- Grafico de evolucao do TPR por setor em funcao do epsilon
+## Saídas
+- Tabelas com métricas globais e variação dos dados
+- Tabela por setor com métricas de classificação
+- Gráfico de evolução do TPR por setor em função do epsilon
 
-As visualizacoes sao exibidas via Matplotlib (nao sao salvas em disco por padrao).
+As visualizações são exibidas via Matplotlib (não são salvas em disco por padrão).
