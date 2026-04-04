@@ -39,6 +39,5 @@ def run_logistic_regression( df, preprocessor, *, target= "salario", test_size=0
 
     return {
         "y_test_true": y_test,
-        "y_test_pred": y_test_pred,
-        "model": model,
-    }
+        "y_test_pred": y_test_pred
+        }

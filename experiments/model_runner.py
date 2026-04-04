@@ -1,7 +1,7 @@
 from preprocessing import build_preprocessor
 from metrics import compute_model_metrics
 
-def run_model( df, model_runner, model_name):
+def run_model( df, model_runner):
     """
     Protocolo experimental padrão do projeto.
 
@@ -21,25 +21,14 @@ def run_model( df, model_runner, model_name):
 
     preprocessor = build_preprocessor(df=df)
 
-    run_output = model_runner(
+    return  model_runner(
         df=df,
         preprocessor=preprocessor,
     )
 
-    return {
-        "model_name": model_name,
-        "results": run_output,
-    }
+def model_metrics(model_output, dataset_name):
 
-def model_metrics(model_output, dataset_name, model_name):
-
-    output = compute_model_metrics(
+    return compute_model_metrics(
         y_true=model_output['results']["y_test_true"],
         y_pred=model_output['results']["y_test_pred"],
-    )
-
-
-    return {
-        "model_name": model_name,
-        "results": output,
-    }
+    ) 
