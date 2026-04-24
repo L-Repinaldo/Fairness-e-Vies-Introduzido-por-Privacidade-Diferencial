@@ -1,80 +1,241 @@
-﻿# Fairness-e-Vies-Introduzido-por-Privacidade-Diferencial
+﻿# Fairness e Viés Induzido por Privacidade Diferencial
 
 ## Visão Geral
-Este projeto avalia se datasets tabulares de RH com privacidade diferencial (DP) podem induzir viés mensurável em modelos simples. A comparação é feita entre um baseline e versões DP (eps_0.1, eps_0.5, eps_1.0, eps_2.0) já disponíveis no repositório.
 
-O pipeline executa um classificador fixo (Regressão Logística) e mede métricas globais e por grupo (setor), agregando resultados por seeds e tamanhos de teste.
+Este repositório investiga se a aplicação de Privacidade Diferencial (DP) em datasets tabulares de RH pode introduzir **viés mensurável** em modelos de Machine Learning simples.
 
-## O que foi implementado
-- Carregamento de datasets versionados em `data/datasets/<versao>`
-- Criação do target `salario_classe` usando o limiar `mean + std` do salário
-- Preprocessamento fixo com one-hot em `cargo` e `setor`
-- Padronização de `idade`, `tempo_na_empresa`, `nota_media` quando presentes
-- Treino com Regressão Logística (`liblinear`, `max_iter=1000`)
-- Avaliação com matriz de confusão (tp, tn, fp, fn, tpr, fpr)
-- Fairness por grupo **setor** com filtro de tamanho mínimo (>= 30)
-- Agregação de métricas por seed e por test_size
-- Visualização em tabelas e gráfico (TPR x epsilon por setor)
+A análise é conduzida comparando:
 
-## O que não está no projeto
-- Aplicação de DP (os datasets DP já estão prontos)
-- Comparação de mecanismos DP
-- Alteração dos datasets
+- Um dataset **baseline (sem DP)**  
+- Múltiplas versões **privatizadas** com diferentes níveis de ε:
+  - `0.1`, `0.5`, `1.0`, `2.0`
 
-## Estrutura
-```text
-project-c-fairness-dp/
-├── data/
-├── preprocessing/
-├── model/
-├── metrics/
-├── plots/
-├── experiments/
-├── sanity_check/
-├── config.py
-└── main.py
+O objetivo não é otimizar modelos, mas **observar como o ruído afeta o comportamento estatístico e a equidade do aprendizado**.
+
+---
+
+## Papel no Ecossistema do Projeto
+
+Este repositório atua como **módulo de análise de fairness**, dentro de um pipeline maior:
+
+- Dados já foram:
+  - gerados (sistema de RH)
+  - privatizados (pipeline de DP)
+- Este projeto:
+  - **não altera dados**
+  - **não aplica DP**
+  - apenas mede efeitos
+
+Aqui, o foco não é utilidade global ou ataque, mas:
+
+> **como a DP impacta grupos de forma desigual**
+
+---
+
+## Objetivo
+
+Avaliar empiricamente se diferentes níveis de ε:
+
+- Alteram a distribuição dos dados  
+- Afetam métricas de classificação  
+- Introduzem ou amplificam viés entre grupos (setor)  
+- Criam distorções sistemáticas no TPR/FPR  
+
+A pergunta central é:
+
+> **Privacidade Diferencial pode induzir unfairness mesmo em modelos simples?**
+
+---
+
+## Abordagem Experimental
+
+O pipeline segue uma estrutura fixa para isolar o efeito da DP.
+
+### Modelo
+
+- Regressão Logística (`liblinear`)
+- `max_iter = 1000`
+- Sem tuning
+
+Justificativa:
+
+- Modelo simples e interpretável  
+- Sensível a mudanças na distribuição  
+- Evita mascarar efeitos do ruído  
+
+---
+
+### Target
+
+  - `salario_classe`
+- Definido como:
+
+``` python
+    salario > mean + std
 ```
 
-## Dependências
-Instale os pacotes listados em `requirements.txt`:
-```bash
-pip install -r requirements.txt
-```
+## Preprocessamento
+  - One-hot encoding:
+    - cargo
+    - setor
+  - Padronização (quando presentes):
+    - idade
+    - tempo_na_empresa
+    - nota_media
 
-## Como executar
-1. Pipeline principal:
-```bash
-python main.py
-```
+Pipeline fixo para garantir comparabilidade.
 
-2. Sanity check (baseline):
-```bash
-python sanity_check/sanity_model_check.py
-```
+---
 
-## Dados esperados
-Os CSVs são carregados de `data/datasets/<versao>` (definido em `config.py`) com os nomes:
-- `baseline.csv`
-- `dp_eps_0.1.csv`
-- `dp_eps_0.5.csv`
-- `dp_eps_1.0.csv`
-- `dp_eps_2.0.csv`
+## Avaliação
+  ***Métricas Globais***
+    - TP, TN, FP, FN
+    - TPR (recall positivo)
+    - FPR
+  ***Fairness por Grupo (setor)***
+    - Métricas calculadas por setor
+    - Filtro: grupos com ≥ 30 amostras
 
-Colunas esperadas:
-- `salario` (usado para gerar `salario_classe`)
-- `cargo` (obrigatória)
-- `setor` (obrigatória)
-- `idade` (opcional)
-- `tempo_na_empresa` (opcional)
-- `nota_media` (opcional)
+---
+
+## Controle Experimental
+  - Múltiplas seeds
+  - Diferentes test_size
+  - Agregação dos resultados
+Isso reduz variância e evita conclusões baseadas em flutuação aleatória.
+
+---
+
+## Escopo do Projeto
+
+Este repositório:
+
+  - Carrega datasets versionados
+  - Executa pipeline fixo de ML
+  - Mede métricas globais e por grupo
+  - Compara comportamento entre níveis de ε
+  - Gera tabelas e visualizações
+
+Este repositório ***não***:
+
+  - Aplica Privacidade Diferencial
+  - Gera ou modifica dados
+  - Compara mecanismos de DP
+  - Otimiza modelos
+    
+---
+
+## Estrutura do Projeto
+
+    project-fairness-dp/
+    ├── data/
+    ├── preprocessing/
+    ├── model/
+    ├── metrics/
+    ├── plots/
+    ├── experiments/
+    ├── sanity_check/
+    ├── config.py
+    └── main.py
+  
+---
+
+## Dados
+ Datasets esperados em:
+ 
+         data/datasets/<versao>/
+
+Arquivos:
+
+    baseline.csv
+    dp_eps_0.1.csv
+    dp_eps_0.5.csv
+    dp_eps_1.0.csv
+    dp_eps_2.0.csv
+
+Colunas esperadas
+
+ - Obrigatórias:
+
+     - salario
+     - cargo
+     - setor
+
+- Opcionais:
+
+    - idade
+    - tempo_na_empresa
+    - nota_media
+ 
+---
+
+## Execução
+
+Pipeline principal
+
+    python main.py
+
+Sanity check (baseline)
+
+    python sanity_check/sanity_model_check.py
+    
+---
 
 ## Saídas
-- Tabelas com métricas globais e variação dos dados
-- Tabela por setor com métricas de classificação
-- Gráfico de evolução do TPR por setor em função do epsilon
 
-As visualizações são exibidas via Matplotlib (não são salvas em disco por padrão).
+O projeto gera:
 
+### Tabelas
+
+  - Métricas globais
+  - Variação estatística dos dados
+  - Resultados por setor
+
+### Visualizações
+
+  - Evolução do TPR por setor em função de ε
+
+As visualizações são exibidas via Matplotlib (não persistidas por padrão).
+
+---
+
+## Interpretação dos Resultados
+Os resultados permitem observar:
+
+  - Se a DP degrada desempenho de forma uniforme
+  - Se certos setores são mais afetados que outros
+  - Se há distorções sistemáticas no TPR/FPR
+  - Se o ruído cria assimetria entre grupos
+  - 
+***Importante:***
+
+        Queda de performance ≠ viés
+        Viés surge quando o impacto não é uniforme entre grupos
+    
+---
+
+## Reprodutibilidade
+
+Os experimentos são determinísticos dado:
+
+  - Dataset versionado
+  - Seeds fixas
+  - Pipeline imutável
+
+A versão ativa é definida em:
+
+    config.py
+
+---
+
+## Limitações
+
+  - Apenas um modelo (Regressão Logística)
+  - Apenas um tipo de feature engineering
+  - Apenas fairness por setor
+  - Não mede causalidade, apenas correlação
+  
+---
 
 ##Imagens 
 
@@ -89,3 +250,26 @@ As visualizações são exibidas via Matplotlib (não são salvas em disco por p
 
 ***Resultados por Setor***
 <img width="1366" height="655" alt="Resultados setor" src="https://github.com/user-attachments/assets/7952dc62-d33c-418a-a9ef-6b3d7b42288f" />
+
+---
+
+## Motivação
+
+Este projeto foi desenhado para:
+  - Isolar o efeito da Privacidade Diferencial
+  - Analisar impactos além da utilidade média
+  - Tornar visível o comportamento por grupo
+  - Explorar a relação entre ruído e fairness
+    
+---
+
+## Observações
+
+  - Dados são simulados
+  - Uso acadêmico
+  - Resultados têm caráter explicativo, não prescritivo
+
+---
+
+## Licença
+Uso educacional e acadêmico.
