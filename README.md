@@ -87,8 +87,5 @@ As visualizações são exibidas via Matplotlib (não são salvas em disco por p
 ***Evolução do TPR por setor***
 <img width="1366" height="655" alt="setor tpr" src="https://github.com/user-attachments/assets/707ac1c0-2cdc-4e5b-9829-de5a76e492d6" />
 
-***Resultados potr Setor***
-<img width="640" height="480" alt="setor" src="https://github.com/user-attachments/assets/e31e7bf7-c1f3-41ba-9a7b-dd9503109dba" />
-
-
-
+***Resultados por Setor***
+<img width="1366" height="655" alt="Resultados setor" src="https://github.com/user-attachments/assets/7952dc62-d33c-418a-a9ef-6b3d7b42288f" />
