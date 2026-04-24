@@ -74,3 +74,21 @@ Colunas esperadas:
 - Gráfico de evolução do TPR por setor em função do epsilon
 
 As visualizações são exibidas via Matplotlib (não são salvas em disco por padrão).
+
+
+##Imagens 
+
+***data***
+<img width="640" height="480" alt="data" src="https://github.com/user-attachments/assets/4ee032a8-61a2-4baa-b32d-d6eef440cc3d" />
+
+***Resultados Logistic Regression***
+<img width="1366" height="655" alt="Figure_1" src="https://github.com/user-attachments/assets/104dd66d-0042-4984-bdc1-333f8a834acc" />
+
+***Evolução do TPR por setor***
+<img width="1366" height="655" alt="setor tpr" src="https://github.com/user-attachments/assets/707ac1c0-2cdc-4e5b-9829-de5a76e492d6" />
+
+***Gsdfghjk***
+<img width="640" height="480" alt="setor" src="https://github.com/user-attachments/assets/e31e7bf7-c1f3-41ba-9a7b-dd9503109dba" />
+
+
+
